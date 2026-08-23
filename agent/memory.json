@@ -1,0 +1,29 @@
+{
+  "CUST-1001": {
+    "customer_id": "CUST-1001",
+    "current_state": "PAID",
+    "promised_date": null,
+    "last_message": "Bhai kal pakka kar dunga.",
+    "last_intent": "PAYMENT_RECEIVED",
+    "next_action": "CLOSE_CASE",
+    "updated_at": "2026-08-23T05:54:14.445Z"
+  },
+  "CUST-TEST-001": {
+    "customer_id": "CUST-TEST-001",
+    "current_state": "CLOSED",
+    "promised_date": null,
+    "last_message": "I will pay tomorrow.",
+    "last_intent": "PAYMENT_RECEIVED",
+    "next_action": "CLOSE_CASE",
+    "updated_at": "2026-08-23T06:02:46.010Z"
+  },
+  "CUST-AGENT-001": {
+    "customer_id": "CUST-AGENT-001",
+    "current_state": "PROMISED_PAYMENT",
+    "promised_date": "TOMORROW",
+    "last_message": "Bhai kal pakka kar dunga.",
+    "last_intent": "PROMISE_TO_PAY",
+    "next_action": "WAITING_FOR_PAYMENT",
+    "updated_at": "2026-08-23T06:05:24.659Z"
+  }
+}
