@@ -1,15 +1,23 @@
-# B2B Accounts Receivable (AR) & Mock CRM System
+# Artha Setu AI
 
-A functional Mock ERP / CRM backend and web interface simulating an enterprise accounting system. Built as a high-fidelity data source for AI-powered receivables recovery workflows and autonomous collection agents.
+### Intelligent Receivables Recovery
+
+Artha Setu AI is an AI-powered accounts receivable recovery platform designed to help businesses understand customer payment conversations, track payment promises, automate follow-ups, verify payments against the financial ledger, and escalate risky cases for human review.
+
+It combines LLM-based conversation intelligence with deterministic financial logic, controlled recovery states, safety-gated automation, Gmail integration, and a complete audit trail.
+
+> **The AI understands the conversation.  
+> The ledger decides the money.  
+> The safety layer decides what the AI is allowed to do.**
 
 ---
 
-## 1. Technology Stack Used
+## 1. Technology Stack 
 - **Backend Runtime**: Node.js (v24 / v20+)
 - **Server Framework**: Express.js (v4)
 - **Database**: SQLite3 (`crm_database.sqlite`) with WAL mode and foreign key integrity
 - **Middleware**: CORS (enabled for all origins `*`), JSON body parser, request logging
-- **Frontend**: Responsive Single Page App (SPA) styled with Tailwind CSS & Lucide icons
+Frontend: Responsive Single Page Application (SPA) using HTML, CSS & JavaScript
 
 ---
 
