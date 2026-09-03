@@ -1,7 +1,6 @@
-{
-  "name": "mock-ar-crm",
-  "version": "1.0.0",
-  "description": "Functional Mock CRM & Accounts Receivable ERP for B2B Receivables Recovery AI",
+{"name": "artha-setu-ai",
+"version": "1.0.0",
+"description": "AI-powered receivables recovery platform with intelligent customer communication, payment verification, automated recovery workflows, and safety-controlled actions",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,6 +12,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^4.21.2",
+    "googleapis": "^176.0.0",
     "sqlite3": "^5.1.7"
   }
 }

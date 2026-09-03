@@ -1,12 +1,15 @@
 {
   "CUST-1001": {
     "customer_id": "CUST-1001",
-    "current_state": "PAID",
+    "current_state": "CLOSED",
     "promised_date": null,
-    "last_message": "Bhai kal pakka kar dunga.",
+    "last_message": "I have transferred the remaining 4200 for invoice INV-2024-002. Please verify the payment.",
     "last_intent": "PAYMENT_RECEIVED",
-    "next_action": "CLOSE_CASE",
-    "updated_at": "2026-08-23T05:54:14.445Z"
+    "next_action": "NO_ACTION",
+    "updated_at": "2026-08-30T14:20:08.332Z",
+    "last_outbound_message": null,
+    "last_execution": "Recovery case closed.",
+    "escalated_to_human": false
   },
   "CUST-TEST-001": {
     "customer_id": "CUST-TEST-001",
@@ -25,5 +28,287 @@
     "last_intent": "PROMISE_TO_PAY",
     "next_action": "WAITING_FOR_PAYMENT",
     "updated_at": "2026-08-23T06:05:24.659Z"
+  },
+  "CUST-1022": {
+    "customer_id": "CUST-1022",
+    "current_state": "PROMISED_PAYMENT",
+    "promised_date": "TOMORROW",
+    "last_message": "HI tomorrow ill pay",
+    "last_intent": "PROMISE_TO_PAY",
+    "next_action": "WAIT_FOR_PAYMENT",
+    "updated_at": "2026-09-03T17:11:56.649Z",
+    "escalated_to_human": false,
+    "last_execution": "Agent is waiting for the promised payment.",
+    "last_outbound_message": null
+  },
+  "CUST-1026": {
+    "customer_id": "CUST-1026",
+    "current_state": "ESCALATED",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "ESCALATE_TO_RECOVERY_TEAM",
+    "updated_at": "2026-09-03T17:36:56.825Z"
+  },
+  "CUST-1008": {
+    "customer_id": "CUST-1008",
+    "current_state": "ESCALATED",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "ESCALATE_TO_RECOVERY_TEAM",
+    "updated_at": "2026-09-03T17:36:56.827Z"
+  },
+  "CUST-1004": {
+    "customer_id": "CUST-1004",
+    "current_state": "ESCALATED",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "ESCALATE_TO_RECOVERY_TEAM",
+    "updated_at": "2026-09-03T17:36:56.828Z"
+  },
+  "CUST-1010": {
+    "customer_id": "CUST-1010",
+    "current_state": "ESCALATED",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "ESCALATE_TO_RECOVERY_TEAM",
+    "updated_at": "2026-09-03T17:36:56.829Z"
+  },
+  "CUST-1014": {
+    "customer_id": "CUST-1014",
+    "current_state": "ESCALATED",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "ESCALATE_TO_RECOVERY_TEAM",
+    "updated_at": "2026-09-03T17:36:56.832Z"
+  },
+  "CUST-1021": {
+    "customer_id": "CUST-1021",
+    "current_state": "ESCALATED",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "ESCALATE_TO_RECOVERY_TEAM",
+    "updated_at": "2026-09-03T17:36:56.833Z"
+  },
+  "CUST-1027": {
+    "customer_id": "CUST-1027",
+    "current_state": "FOLLOW_UP_DUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "SEND_FOLLOW_UP",
+    "updated_at": "2026-09-03T17:36:56.835Z"
+  },
+  "CUST-1002": {
+    "customer_id": "CUST-1002",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-09-03T17:36:56.837Z"
+  },
+  "CUST-1018": {
+    "customer_id": "CUST-1018",
+    "current_state": "FOLLOW_UP_DUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "SEND_FOLLOW_UP",
+    "updated_at": "2026-09-03T17:36:56.838Z"
+  },
+  "CUST-1016": {
+    "customer_id": "CUST-1016",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-09-03T17:36:56.840Z"
+  },
+  "CUST-1030": {
+    "customer_id": "CUST-1030",
+    "current_state": "FOLLOW_UP_DUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "SEND_FOLLOW_UP",
+    "updated_at": "2026-09-03T17:36:56.841Z"
+  },
+  "CUST-1009": {
+    "customer_id": "CUST-1009",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-09-03T17:36:56.843Z"
+  },
+  "CUST-1012": {
+    "customer_id": "CUST-1012",
+    "current_state": "FOLLOW_UP_DUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "SEND_FOLLOW_UP",
+    "updated_at": "2026-09-03T17:36:56.844Z"
+  },
+  "CUST-1032": {
+    "customer_id": "CUST-1032",
+    "current_state": "FOLLOW_UP_DUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "SEND_FOLLOW_UP",
+    "updated_at": "2026-09-03T17:36:56.846Z"
+  },
+  "CUST-1006": {
+    "customer_id": "CUST-1006",
+    "current_state": "FOLLOW_UP_DUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "SEND_FOLLOW_UP",
+    "updated_at": "2026-09-03T17:36:56.847Z"
+  },
+  "CUST-1011": {
+    "customer_id": "CUST-1011",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.593Z"
+  },
+  "CUST-1023": {
+    "customer_id": "CUST-1023",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.595Z"
+  },
+  "CUST-1013": {
+    "customer_id": "CUST-1013",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.596Z"
+  },
+  "CUST-1028": {
+    "customer_id": "CUST-1028",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.598Z"
+  },
+  "CUST-1025": {
+    "customer_id": "CUST-1025",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.600Z"
+  },
+  "CUST-1029": {
+    "customer_id": "CUST-1029",
+    "current_state": "PAID",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CLOSE_CASE",
+    "updated_at": "2026-09-03T17:36:56.849Z"
+  },
+  "CUST-1017": {
+    "customer_id": "CUST-1017",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.604Z"
+  },
+  "CUST-1007": {
+    "customer_id": "CUST-1007",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.606Z"
+  },
+  "CUST-1031": {
+    "customer_id": "CUST-1031",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.607Z"
+  },
+  "CUST-1024": {
+    "customer_id": "CUST-1024",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.609Z"
+  },
+  "CUST-1003": {
+    "customer_id": "CUST-1003",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.611Z"
+  },
+  "CUST-1005": {
+    "customer_id": "CUST-1005",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.615Z"
+  },
+  "CUST-1019": {
+    "customer_id": "CUST-1019",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.619Z"
+  },
+  "CUST-1020": {
+    "customer_id": "CUST-1020",
+    "current_state": "PAID",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CLOSE_CASE",
+    "updated_at": "2026-09-03T17:36:56.851Z"
+  },
+  "CUST-1015": {
+    "customer_id": "CUST-1015",
+    "current_state": "OVERDUE",
+    "promised_date": null,
+    "last_message": null,
+    "last_intent": null,
+    "next_action": "CONTACT_CUSTOMER",
+    "updated_at": "2026-08-23T09:11:07.710Z"
   }
 }

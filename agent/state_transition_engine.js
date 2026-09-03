@@ -5,6 +5,9 @@ const {
 } = require("./state_manager");
 
 
+/**
+ * Generic state transition helper.
+ */
 function transitionTo(customerId, newState, updates = {}) {
     return updateState(customerId, {
         current_state: newState,
@@ -13,6 +16,9 @@ function transitionTo(customerId, newState, updates = {}) {
 }
 
 
+/**
+ * Mark customer as contacted.
+ */
 function markContacted(customerId) {
     return transitionTo(
         customerId,
@@ -24,7 +30,13 @@ function markContacted(customerId) {
 }
 
 
-function markPromiseMade(customerId, promisedDate = "TOMORROW") {
+/**
+ * Record a customer promise to pay.
+ */
+function markPromiseMade(
+    customerId,
+    promisedDate = "TOMORROW"
+) {
     return transitionTo(
         customerId,
         STATES.PROMISED_PAYMENT,
@@ -37,6 +49,9 @@ function markPromiseMade(customerId, promisedDate = "TOMORROW") {
 }
 
 
+/**
+ * Mark a payment follow-up as due.
+ */
 function markFollowUpDue(customerId) {
     return transitionTo(
         customerId,
@@ -48,17 +63,24 @@ function markFollowUpDue(customerId) {
 }
 
 
+/**
+ * Escalate the recovery case to a human.
+ */
 function markEscalated(customerId) {
     return transitionTo(
         customerId,
         STATES.ESCALATED,
         {
             next_action: "ESCALATE_TO_RECOVERY_TEAM",
+            escalated_to_human: true,
         }
     );
 }
 
 
+/**
+ * Mark payment as officially received/verified.
+ */
 function markPaid(customerId) {
     return transitionTo(
         customerId,
@@ -67,34 +89,116 @@ function markPaid(customerId) {
             promised_date: null,
             last_intent: "PAYMENT_RECEIVED",
             next_action: "CLOSE_CASE",
+            escalated_to_human: false,
         }
     );
 }
 
 
-function evaluateState(customerId, paymentReceived = false) {
-    const state = getState(customerId);
+/**
+ * Customer claims payment has been made.
+ *
+ * IMPORTANT:
+ * This does NOT mean payment is confirmed.
+ * The case moves to WAITING_FOR_PAYMENT and the
+ * payment verification workflow takes over.
+ */
+function markPaymentClaimed(
+    customerId,
+    message = null
+) {
+    return transitionTo(
+        customerId,
+        STATES.WAITING_FOR_PAYMENT,
+        {
+            // The old promise is no longer relevant because
+            // the customer now claims payment has been made.
+            promised_date: null,
 
-    // Payment always wins.
+            last_message: message,
+
+            last_intent: "PAYMENT_MADE",
+
+            next_action: "VERIFY_PAYMENT_RECEIPT",
+
+            escalated_to_human: false,
+        }
+    );
+}
+
+
+/**
+ * Evaluate the current recovery state.
+ *
+ * Payment always has the highest priority.
+ */
+function evaluateState(
+    customerId,
+    paymentReceived = false
+) {
+    const state =
+        getState(customerId);
+
+
+    /*
+     * ========================================================
+     * PAYMENT RECEIVED
+     * ========================================================
+     *
+     * Confirmed payment always wins over other states.
+     */
+
     if (paymentReceived) {
         return markPaid(customerId);
     }
 
-    // A promised payment is currently waiting.
-    if (state.current_state === STATES.PROMISED_PAYMENT) {
+
+    /*
+     * ========================================================
+     * PROMISED PAYMENT
+     * ========================================================
+     *
+     * Customer promised payment and the system is waiting.
+     */
+
+    if (
+        state.current_state ===
+        STATES.PROMISED_PAYMENT
+    ) {
         return transitionTo(
             customerId,
             STATES.WAITING_FOR_PAYMENT,
             {
-                next_action: "WAIT_FOR_PROMISED_PAYMENT",
+                next_action:
+                    "WAIT_FOR_PROMISED_PAYMENT",
             }
         );
     }
 
-    // If follow-up is already due, escalate.
-    if (state.current_state === STATES.FOLLOW_UP_DUE) {
-        return markEscalated(customerId);
+
+    /*
+     * ========================================================
+     * FOLLOW-UP DUE
+     * ========================================================
+     *
+     * Existing overdue follow-up requires human escalation.
+     */
+
+    if (
+        state.current_state ===
+        STATES.FOLLOW_UP_DUE
+    ) {
+        return markEscalated(
+            customerId
+        );
     }
+
+
+    /*
+     * ========================================================
+     * NO TRANSITION REQUIRED
+     * ========================================================
+     */
 
     return state;
 }
@@ -107,5 +211,6 @@ module.exports = {
     markFollowUpDue,
     markEscalated,
     markPaid,
+    markPaymentClaimed,
     evaluateState,
 };

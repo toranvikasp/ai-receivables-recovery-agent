@@ -233,9 +233,17 @@ router.patch('/:id', async (req, res) => {
 router.post('/:id/payments', async (req, res) => {
   try {
     const { id } = req.params;
-    const invoice = await get('SELECT * FROM invoices WHERE id = ?', [id]);
+
+    const invoice = await get(
+      'SELECT * FROM invoices WHERE id = ?',
+      [id]
+    );
+
     if (!invoice) {
-      return res.status(404).json({ success: false, error: 'Invoice not found' });
+      return res.status(404).json({
+        success: false,
+        error: 'Invoice not found'
+      });
     }
 
     const {
@@ -246,48 +254,221 @@ router.post('/:id/payments', async (req, res) => {
     } = req.body;
 
     const amount = parseFloat(payment_amount);
+
     if (!amount || amount <= 0) {
-      return res.status(400).json({ success: false, error: 'payment_amount must be greater than 0' });
+      return res.status(400).json({
+        success: false,
+        error: 'payment_amount must be greater than 0'
+      });
     }
 
-    const lastPay = await get('SELECT id FROM payments WHERE id LIKE "PAY-%" ORDER BY id DESC LIMIT 1');
+    /*
+     * ============================================================
+     * PAYMENT ID
+     * ============================================================
+     *
+     * A caller can provide payment_id so the same payment event
+     * can be safely retried without creating a duplicate ledger
+     * entry.
+     */
+
+    const lastPay = await get(
+      'SELECT id FROM payments WHERE id LIKE "PAY-%" ORDER BY id DESC LIMIT 1'
+    );
+
     let nextNum = 1027;
+
     if (lastPay && lastPay.id) {
       const match = lastPay.id.match(/\d+/);
-      if (match) nextNum = parseInt(match[0], 10) + 1;
+
+      if (match) {
+        nextNum = parseInt(match[0], 10) + 1;
+      }
     }
-    const payId = req.body.payment_id || `PAY-${nextNum}`;
+
+    const payId =
+      req.body.payment_id || `PAY-${nextNum}`;
+
+
+    /*
+     * ============================================================
+     * IDEMPOTENCY PROTECTION
+     * ============================================================
+     *
+     * The payment ID is treated as the unique identifier for the
+     * payment event.
+     *
+     * If the same payment_id arrives again, DO NOT insert another
+     * payment and DO NOT modify the invoice balance again.
+     */
+
+    const existingPayment = await get(
+      'SELECT * FROM payments WHERE id = ?',
+      [payId]
+    );
+
+    if (existingPayment) {
+
+      const currentInvoice = await get(
+        'SELECT * FROM invoices WHERE id = ?',
+        [id]
+      );
+
+      console.log(
+        `[IDEMPOTENCY] Duplicate payment ignored: ${payId}`
+      );
+
+      return res.status(200).json({
+        success: true,
+        already_processed: true,
+        duplicate: true,
+        message:
+          'Payment already processed. Duplicate event ignored.',
+        payment: existingPayment,
+        invoice: currentInvoice
+      });
+    }
+
+
+    /*
+     * ============================================================
+     * CREATE PAYMENT
+     * ============================================================
+     */
 
     await run(`
-      INSERT INTO payments (id, invoice_id, customer_id, payment_amount, payment_date, payment_status, payment_method, notes)
+      INSERT INTO payments (
+        id,
+        invoice_id,
+        customer_id,
+        payment_amount,
+        payment_date,
+        payment_status,
+        payment_method,
+        notes
+      )
       VALUES (?, ?, ?, ?, ?, 'COMPLETED', ?, ?)
-    `, [payId, id, invoice.customer_id, amount, payment_date, payment_method, notes]);
+    `, [
+      payId,
+      id,
+      invoice.customer_id,
+      amount,
+      payment_date,
+      payment_method,
+      notes
+    ]);
 
-    const newPaid = invoice.amount_paid + amount;
-    const newOutstanding = Math.max(0, invoice.invoice_amount - newPaid);
+
+    /*
+     * ============================================================
+     * UPDATE INVOICE
+     * ============================================================
+     */
+
+    const newPaid =
+      invoice.amount_paid + amount;
+
+    const newOutstanding =
+      Math.max(
+        0,
+        invoice.invoice_amount - newPaid
+      );
+
     let newStatus = 'PAID';
+
     if (newOutstanding > 0) {
       newStatus = 'PARTIALLY_PAID';
     }
 
     await run(`
       UPDATE invoices
-      SET amount_paid = ?, amount_outstanding = ?, payment_status = ?
+      SET
+        amount_paid = ?,
+        amount_outstanding = ?,
+        payment_status = ?
       WHERE id = ?
-    `, [newPaid, newOutstanding, newStatus, id]);
+    `, [
+      newPaid,
+      newOutstanding,
+      newStatus,
+      id
+    ]);
 
-    const updatedInvoice = await get('SELECT * FROM invoices WHERE id = ?', [id]);
-    const createdPayment = await get('SELECT * FROM payments WHERE id = ?', [payId]);
+
+    /*
+     * ============================================================
+     * RETURN UPDATED RECORDS
+     * ============================================================
+     */
+
+    const updatedInvoice = await get(
+      'SELECT * FROM invoices WHERE id = ?',
+      [id]
+    );
+
+    const createdPayment = await get(
+      'SELECT * FROM payments WHERE id = ?',
+      [payId]
+    );
+
 
     res.status(201).json({
       success: true,
+      already_processed: false,
+      duplicate: false,
       message: 'Payment recorded successfully',
       payment: createdPayment,
       invoice: updatedInvoice
     });
+
   } catch (error) {
-    console.error('Error recording payment:', error);
-    res.status(500).json({ success: false, error: error.message });
+
+    console.error(
+      'Error recording payment:',
+      error
+    );
+
+    /*
+     * SQLite UNIQUE constraint protection.
+     *
+     * This is an additional safety net in case two identical
+     * payment requests arrive at nearly the same time.
+     */
+
+    if (
+      error.message &&
+      error.message.includes('UNIQUE constraint failed')
+    ) {
+
+      const payId = req.body.payment_id;
+
+      const existingPayment = payId
+        ? await get(
+          'SELECT * FROM payments WHERE id = ?',
+          [payId]
+        )
+        : null;
+
+      const currentInvoice = await get(
+        'SELECT * FROM invoices WHERE id = ?',
+        [req.params.id]
+      );
+
+      return res.status(200).json({
+        success: true,
+        already_processed: true,
+        duplicate: true,
+        message:
+          'Payment already processed. Duplicate event ignored.',
+        payment: existingPayment,
+        invoice: currentInvoice
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 });
 

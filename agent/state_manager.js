@@ -57,6 +57,8 @@ function createOrGetState(customerId) {
             promised_date: null,
             last_message: null,
             last_intent: null,
+            last_execution: null,
+            last_outbound_message: null,
             next_action: "CONTACT_CUSTOMER",
             updated_at: new Date().toISOString(),
         };
