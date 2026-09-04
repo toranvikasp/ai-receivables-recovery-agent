@@ -6,9 +6,9 @@ const config = require('../ai-engine/config');
 
 const {
   get,
-  query
+  query,
+  recordAuditEvent
 } = require('../db');
-
 
 // ============================================================
 // AGENT MODULES
@@ -1351,6 +1351,48 @@ router.post(
           newState.current_state
 
       });
+      await recordAuditEvent({
+
+  customerId:
+    customer_id,
+
+  eventType:
+    'STATE_TRANSITION',
+
+  newState:
+    newState.current_state,
+
+  action:
+    action.toUpperCase(),
+
+  priority:
+    newState.current_state === 'ESCALATED'
+      ? 'HIGH'
+      : 'NORMAL',
+
+  requiresHuman:
+    newState.current_state === 'ESCALATED',
+
+  success:
+    true,
+
+  reason:
+    `Recovery state transition executed: ${action.toUpperCase()}`,
+
+  message:
+    `Case transitioned to ${newState.current_state}.`,
+
+  metadata: {
+
+    next_action:
+      newState.next_action,
+
+    source:
+      'MANUAL_RECOVERY_ACTION'
+
+  }
+
+});
 
 
       res.json({
